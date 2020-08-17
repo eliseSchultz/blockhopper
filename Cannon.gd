@@ -4,13 +4,14 @@ extends Node2D
 export var identification = ""
 export var cannonPower = 0
 export var cannonType = "" #must be the name of the animation or static
+
 var orientation = Vector2(0,-1)
 
 var angle_o = {
 	0:Vector2(0,-1), 
 	45:Vector2(1,-1), 
 	90:Vector2(1,0), 
-	135:Vector2(1,-1),
+	135:Vector2(1,1),
 	180:Vector2(0,1),
 	225:Vector2(-1,1),
 	270:Vector2(-1,0),

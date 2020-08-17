@@ -5,7 +5,7 @@ signal player_death
 
 enum {LEFT = -1, RIGHT = 1}
 const SPEED = 128
-const JUMPMAX = -600
+const JUMPMAX = -400
 const GRAV = 10
 const MAXGRAV = 1000
 const JUMPSPEED = -200
@@ -37,7 +37,6 @@ func processMovementInput(delta):
 		cannonPlayerMoveModifier = currSpeed/2
 	else:
 		cannonPlayerMoveModifier = 0
-	
 
 	if in_cannon:
 		jumping = false
@@ -77,7 +76,6 @@ func processMovementInput(delta):
 		falling = true
 			
 	playMovementAnimation()
-			
 
 func playMovementAnimation():
 	if not $AnimationPlayer.current_animation == "cannon_shot":
@@ -91,7 +89,6 @@ func playMovementAnimation():
 		else:
 			$AnimationPlayer.play("idle")
 
-		
 
 func calcMotion():
 	if prevOrientation != orientation:
@@ -117,6 +114,7 @@ func cannon_shot(cV, cPos, cPower):
 	allow_enter_cannon = false
 	$CannonMovementTimer.start()
 	$AnimationPlayer.play("cannon_shot")
+	$CannonSound.play(0.0)
 	motion = Vector2(cannonVector.x*cannonPower,cannonVector.y*cannonPower)
 
 func check_tile_collisions():
@@ -133,7 +131,7 @@ func check_tile_collisions():
 				
 				var tile_name = collision.collider.tile_set.tile_get_name(tile_id)
 
-				if tile_name == "spikes" or tile_name == "lava":
+				if (not is_dead) and (tile_name == "spikes" or tile_name == "lava"):
 					emit_signal("player_death")
 					death()
 				elif tile_name == "door":
@@ -142,10 +140,13 @@ func check_tile_collisions():
 func death():
 	$DeathTimer.start()
 	is_dead = true
+	allow_enter_cannon = false
 	$Sprite.visible = false
+	$CannonCollisonDetector/CollisionShape2D.disabled = true
+	$CollisionShape2D.disabled = true
 	$DeathParticles.emitting = true
+	$DeathSound.play(0.0)
 	death_counter += 1
-
 
 
 func _physics_process(delta):
@@ -171,6 +172,9 @@ func _on_DeathTimer_timeout():
 	position = startPosition
 	$Sprite.visible = true
 	is_dead = false
+	$CannonCollisonDetector/CollisionShape2D.disabled = false
+	$CollisionShape2D.disabled = false
+	allow_enter_cannon = true
 
 
 func _on_CannonMovementTimer_timeout():

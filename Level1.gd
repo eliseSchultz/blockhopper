@@ -3,6 +3,7 @@ extends Node2D
 signal collided
 
 var currCannon
+var currCannonPosition
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -20,11 +21,12 @@ func _process(delta):
 	if $Player.in_cannon:
 		if Input.is_action_just_pressed("jump"):
 			#cannon_shot(cV, cPos, cPower)
-			$Player.cannon_shot(currCannon.orientation, currCannon.position, currCannon.cannonPower)
+			$Player.cannon_shot(currCannon.orientation, currCannonPosition, currCannon.cannonPower)
 
 
 func _on_CannonCollisonDetector_area_entered(area):
 	currCannon = area.get_parent()
+	currCannonPosition = currCannon.position + (area.position *-1)
 
 
 func _on_Player_door_touch():

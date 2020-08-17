@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://sprites/happycannon.png" type="Texture" id=1]
 [ext_resource path="res://Cannon.gd" type="Script" id=2]
@@ -175,7 +175,7 @@ tracks/2/keys = {
 "values": [ 0.0, 45.0, 90.0, 135.0, 180.0, 225.0, 270.0, 315.0 ]
 }
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id=7]
 resource_name = "move_static (copy)"
 length = 2.0
 loop = true
@@ -201,8 +201,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 1, 2 )
 }
 
-[sub_resource type="Animation" id=7]
-resource_name = "move_static_h"
+[sub_resource type="Animation" id=8]
 length = 2.0
 loop = true
 step = 0.25
@@ -227,7 +226,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 1, 2 )
 }
 
-[sub_resource type="Animation" id=11]
+[sub_resource type="Animation" id=9]
 resource_name = "move_static_v"
 length = 2.0
 step = 0.5
@@ -252,8 +251,31 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 1, 2 )
 }
 
-[sub_resource type="Animation" id=9]
-resource_name = "rotate"
+[sub_resource type="Animation" id=10]
+resource_name = "move_static_v_half"
+length = 2.0
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Area2D:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 1, 2 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Area2D:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( -24, -0.25, 0, 0.25, 0, 24, -0.25, 0, 0.25, 0, -24, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 1, 2 )
+}
+
+[sub_resource type="Animation" id=11]
 length = 2.0
 loop = true
 step = 0.25
@@ -270,14 +292,12 @@ tracks/0/keys = {
 "values": [ 0.0, 45.0, 90.0, 135.0, 180.0, 225.0, 270.0, 315.0 ]
 }
 
-[sub_resource type="Animation" id=10]
-resource_name = "static"
+[sub_resource type="Animation" id=12]
 
 [node name="Cannon" type="Node2D"]
 script = ExtResource( 2 )
 
 [node name="Area2D" type="Area2D" parent="."]
-position = Vector2( 0, 1.90735e-06 )
 __meta__ = {
 "_edit_group_": true
 }
@@ -295,9 +315,10 @@ anims/move_counter_rotate = SubResource( 3 )
 anims/move_rotate = SubResource( 4 )
 anims/move_rotate_half = SubResource( 5 )
 anims/move_rotate_half_fast = SubResource( 6 )
-"anims/move_static (copy)" = SubResource( 8 )
-anims/move_static_h = SubResource( 7 )
-anims/move_static_v = SubResource( 11 )
-anims/rotate = SubResource( 9 )
-anims/static = SubResource( 10 )
+"anims/move_static (copy)" = SubResource( 7 )
+anims/move_static_h = SubResource( 8 )
+anims/move_static_v = SubResource( 9 )
+anims/move_static_v_half = SubResource( 10 )
+anims/rotate = SubResource( 11 )
+anims/static = SubResource( 12 )
 [connection signal="body_entered" from="Area2D" to="." method="_on_Cannon_body_entered"]
