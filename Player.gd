@@ -5,9 +5,9 @@ signal player_death
 
 enum {LEFT = -1, RIGHT = 1}
 const SPEED = 128
-const JUMPMAX = -400
+const JUMPMAX = -300
 const GRAV = 10
-const MAXGRAV = 1000
+const MAXGRAV = 500
 const JUMPSPEED = -200
 const SPEEDMULT = 8
 const UP_DIR = Vector2(0,-1)
@@ -25,6 +25,7 @@ var is_shot = false
 var is_dead = false
 var allow_movement = true
 var allow_enter_cannon = true
+var allow_input = true
 var death_counter = 0
 
 var cannonVector = Vector2()
@@ -44,20 +45,21 @@ func processMovementInput(delta):
 		motion = Vector2(0,0)
 		currSpeed = 0
 	#lateral movement
-	elif Input.is_action_pressed("ui_left"):
-		prevOrientation = orientation
-		orientation = -1
-		$Sprite.flip_h = false
-		calcMotion()
-	elif Input.is_action_pressed("ui_right"):
-		prevOrientation = orientation
-		orientation = 1
-		$Sprite.flip_h = true
-		calcMotion()
-	elif not is_shot: #this may need to be refined
-		#TODO: add gradual slow down
-		motion.x = 0
-		currSpeed = 0
+	elif allow_input:
+		if Input.is_action_pressed("ui_left"):
+			prevOrientation = orientation
+			orientation = -1
+			$Sprite.flip_h = false
+			calcMotion()
+		elif Input.is_action_pressed("ui_right"):
+			prevOrientation = orientation
+			orientation = 1
+			$Sprite.flip_h = true
+			calcMotion()
+		elif not is_shot: #this may need to be refined
+			#TODO: add gradual slow down
+			motion.x = 0
+			currSpeed = 0
 
 	if is_on_floor():
 		jumping = false
@@ -111,9 +113,10 @@ func cannon_shot(cV, cPos, cPower):
 	visible = true
 	is_shot = true
 	falling = true
+	allow_input = false
 	allow_enter_cannon = false
 	$CannonMovementTimer.start()
-	$AnimationPlayer.play("cannon_shot")
+	#$AnimationPlayer.play("cannon_shot")
 	$CannonSound.play(0.0)
 	motion = Vector2(cannonVector.x*cannonPower,cannonVector.y*cannonPower)
 
@@ -163,6 +166,7 @@ func _physics_process(delta):
 	else:
 		processMovementInput(delta)
 	
+	print("motion: ",motion)
 	motion = move_and_slide(motion, UP_DIR)
 	
 	if not is_dead:
@@ -180,3 +184,4 @@ func _on_DeathTimer_timeout():
 func _on_CannonMovementTimer_timeout():
 	allow_movement = true
 	allow_enter_cannon = true
+	allow_input = true

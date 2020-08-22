@@ -39,4 +39,4 @@ func _on_CannonCollisonDetector_area_entered(area):
 
 
 func _on_Player_door_touch():
-	get_tree().change_scene("res://Level1.tscn")
+	get_tree().change_scene("res://Level4.tscn")

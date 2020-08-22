@@ -202,7 +202,7 @@ process_material = SubResource( 8 )
 
 [node name="CannonMovementTimer" type="Timer" parent="."]
 process_mode = 0
-wait_time = 0.15
+wait_time = 0.118
 one_shot = true
 
 [node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
