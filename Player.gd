@@ -56,16 +56,19 @@ func processMovementInput(delta):
 			orientation = 1
 			$Sprite.flip_h = true
 			calcMotion()
-		elif not is_on_floor(): #this may need to be refined
-			pass
+		elif not is_on_floor() and not is_shot: #this may need to be refined
 			#TODO: add gradual slow down
-			#if motion.x > 0:
-			#	motion.x -= motion.x/12
-			#	currSpeed -= currSpeed/12
-			#elif motion.x < 0:
-			#	motion.x += motion.x/-12
-			#	currSpeed += currSpeed/-12
+			if motion.x < 1 and motion.x > -1:
+				motion.x = 0
+			if motion.x > 0:
+				motion.x -= motion.x/12
+				currSpeed -= currSpeed/12
+			elif motion.x < 0:
+				motion.x += motion.x/-12
+				currSpeed += currSpeed/-12
 		elif not is_shot:
+			if motion.x < 1 and motion.x > -1:
+				motion.x = 0
 			if motion.x > 0:
 				motion.x -= motion.x*5/8
 				currSpeed -= currSpeed*5/8
@@ -147,7 +150,7 @@ func check_tile_collisions():
 				
 				var tile_name = collision.collider.tile_set.tile_get_name(tile_id)
 
-				if (not is_dead) and (tile_name == "spikes" or tile_name == "lava"):
+				if (not is_dead) and (tile_name == "spikes" or tile_name == "lava" or tile_name == "hurtwall" or tile_name == "hurtupslope" or tile_name == "hurtdownslope"):
 					emit_signal("player_death")
 					death()
 				elif tile_name == "door":

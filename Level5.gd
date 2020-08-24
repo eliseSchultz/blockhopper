@@ -11,9 +11,9 @@ func _ready():
 	#set_params(type, id, power=600, angle=0, speed=1.0)
 	$Cannon.set_params("static", "c1", 600)
 	$Cannon2.set_params("move_static_h_quarter", "c2", 500, 0, 4)
-	$Cannon3.set_params("move_static_h", "c3", 300, 180, 2)
-	$Cannon4.set_params("move_static_h", "c3", 300, 0, 1.5)
-	$Cannon5.set_params("rotate", "c3", 500, 0, 1.5)
+	$Cannon3.set_params("move_static_h", "c3", 300, 180, 1.5)
+	$Cannon4.set_params("move_static_h", "c4", 300, 0, 1)
+	$Cannon5.set_params("rotate", "c5", 500, 0, 1.5)
 
 	
 	$Player.startPosition = $Player.position
