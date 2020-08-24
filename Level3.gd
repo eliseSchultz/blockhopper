@@ -10,13 +10,13 @@ var currArea
 func _ready():
 	#set_params(type, id, power=600, angle=0)
 	$Cannon.set_params("static", "c1", 300)
-	$Cannon2.set_params("move_rotate", "c2", 400)
-	$Cannon3.set_params("static", "c3", 300, 90)
-	$Cannon4.set_params("move_static_h", "c4", 200, 180)
-	$Cannon5.set_params("move_static_h", "c5", 200, 180)
+	$Cannon2.set_params("move_rotate", "c2", 400, .8)
+	$Cannon3.set_params("static", "c3", 300, 135)
+	$Cannon4.set_params("move_static_h", "c4", 200, 180, 1.3)
+	$Cannon5.set_params("move_static_h", "c5", 200, 180, .9)
 	$Cannon6.set_params("counter_rotate", "c6", 200)
-	$Cannon7.set_params("rotate", "c7", 200)
-	$Cannon8.set_params("rotate", "c8", 300)
+	$Cannon7.set_params("rotate", "c7", 200, 0, 1.3)
+	$Cannon8.set_params("rotate", "c8", 300, 0, 1.6)
 	$Cannon9.set_params("move_static_v_half", "c9", 300, 270)
 	
 	$Player.startPosition = $Player.position

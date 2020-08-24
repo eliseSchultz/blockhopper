@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://sprites/happycannon.png" type="Texture" id=1]
 [ext_resource path="res://Cannon.gd" type="Script" id=2]
@@ -227,7 +227,58 @@ tracks/1/keys = {
 }
 
 [sub_resource type="Animation" id=9]
-resource_name = "move_static_v"
+resource_name = "move_static_h_half"
+length = 2.0
+loop = true
+step = 0.25
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Area2D:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( -32, -0.25, 0, 0.25, 0, 32, -0.25, 0, 0.25, 0, -32, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 1, 2 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Area2D:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 1.90735e-06, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 1, 2 )
+}
+
+[sub_resource type="Animation" id=14]
+resource_name = "move_static_h_quarter"
+length = 2.0
+loop = true
+step = 0.25
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Area2D:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( -8, -0.25, 0, 0.25, 0, 8, -0.25, 0, 0.25, 0, -8, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 1, 2 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Area2D:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 1, 2 )
+}
+
+[sub_resource type="Animation" id=10]
 length = 2.0
 step = 0.5
 tracks/0/type = "bezier"
@@ -251,9 +302,9 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 1, 2 )
 }
 
-[sub_resource type="Animation" id=10]
-resource_name = "move_static_v_half"
+[sub_resource type="Animation" id=11]
 length = 2.0
+loop = true
 tracks/0/type = "bezier"
 tracks/0/path = NodePath("Area2D:position:x")
 tracks/0/interp = 1
@@ -275,7 +326,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 1, 2 )
 }
 
-[sub_resource type="Animation" id=11]
+[sub_resource type="Animation" id=12]
 length = 2.0
 loop = true
 step = 0.25
@@ -292,7 +343,7 @@ tracks/0/keys = {
 "values": [ 0.0, 45.0, 90.0, 135.0, 180.0, 225.0, 270.0, 315.0 ]
 }
 
-[sub_resource type="Animation" id=12]
+[sub_resource type="Animation" id=13]
 
 [node name="Cannon" type="Node2D"]
 script = ExtResource( 2 )
@@ -317,8 +368,10 @@ anims/move_rotate_half = SubResource( 5 )
 anims/move_rotate_half_fast = SubResource( 6 )
 "anims/move_static (copy)" = SubResource( 7 )
 anims/move_static_h = SubResource( 8 )
-anims/move_static_v = SubResource( 9 )
-anims/move_static_v_half = SubResource( 10 )
-anims/rotate = SubResource( 11 )
-anims/static = SubResource( 12 )
+anims/move_static_h_half = SubResource( 9 )
+anims/move_static_h_quarter = SubResource( 14 )
+anims/move_static_v = SubResource( 10 )
+anims/move_static_v_half = SubResource( 11 )
+anims/rotate = SubResource( 12 )
+anims/static = SubResource( 13 )
 [connection signal="body_entered" from="Area2D" to="." method="_on_Cannon_body_entered"]

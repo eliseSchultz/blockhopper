@@ -8,10 +8,12 @@ var currArea
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	#set_params(type, id, power=600, angle=0)
-	$Cannon.set_params("static", "c1", 400, 270)
-	$Cannon2.set_params("move_static_v", "c2", 300, 315)
-	$Cannon3.set_params("move_static_v", "c3", 700, 270)
+	#set_params(type, id, power=600, angle=0, speed=1.0)
+	$Cannon.set_params("static", "c1", 600)
+	$Cannon2.set_params("move_static_h_quarter", "c2", 500, 0, 4)
+	$Cannon3.set_params("move_static_h", "c3", 300, 180, 2)
+	$Cannon4.set_params("move_static_h", "c3", 300, 0, 1.5)
+	$Cannon5.set_params("rotate", "c3", 500, 0, 1.5)
 
 	
 	$Player.startPosition = $Player.position
@@ -33,4 +35,4 @@ func _on_CannonCollisonDetector_area_entered(area):
 
 
 func _on_Player_door_touch():
-	get_tree().change_scene("res://Level5.tscn")
+	get_tree().change_scene("res://Level1.tscn")

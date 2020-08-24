@@ -56,10 +56,23 @@ func processMovementInput(delta):
 			orientation = 1
 			$Sprite.flip_h = true
 			calcMotion()
-		elif not is_shot: #this may need to be refined
+		elif not is_on_floor(): #this may need to be refined
+			pass
 			#TODO: add gradual slow down
-			motion.x = 0
-			currSpeed = 0
+			#if motion.x > 0:
+			#	motion.x -= motion.x/12
+			#	currSpeed -= currSpeed/12
+			#elif motion.x < 0:
+			#	motion.x += motion.x/-12
+			#	currSpeed += currSpeed/-12
+		elif not is_shot:
+			if motion.x > 0:
+				motion.x -= motion.x*5/8
+				currSpeed -= currSpeed*5/8
+			elif motion.x < 0:
+				motion.x += motion.x*-5/8
+				currSpeed += currSpeed*-5/8
+			
 
 	if is_on_floor():
 		jumping = false
@@ -82,7 +95,7 @@ func processMovementInput(delta):
 func playMovementAnimation():
 	if not $AnimationPlayer.current_animation == "cannon_shot":
 		rotation_degrees = 0
-		if motion.x != 0 and is_on_floor():
+		if motion.x != 0 and is_on_floor() and (Input.is_action_pressed("ui_left") or Input.is_action_pressed("ui_right")):
 			$AnimationPlayer.play("walk")
 		elif motion.y < 0:
 			$AnimationPlayer.play("jumping")
@@ -97,7 +110,7 @@ func calcMotion():
 		currSpeed = 0
 	if(currSpeed < SPEED):
 		currSpeed += SPEEDMULT
-		print(currSpeed)
+		#print(currSpeed)
 	motion.x = orientation * currSpeed + (-1*orientation*cannonPlayerMoveModifier)
 
 func player_enter_cannon():
@@ -166,7 +179,7 @@ func _physics_process(delta):
 	else:
 		processMovementInput(delta)
 	
-	print("motion: ",motion)
+	#print("motion: ",motion)
 	motion = move_and_slide(motion, UP_DIR)
 	
 	if not is_dead:
