@@ -4,13 +4,15 @@ extends Node2D
 export var identification = ""
 export var cannonPower = 0
 export var cannonType = "" #must be the name of the animation or static
+export var animSpeed = 1.0
+
 var orientation = Vector2(0,-1)
 
 var angle_o = {
 	0:Vector2(0,-1), 
 	45:Vector2(1,-1), 
 	90:Vector2(1,0), 
-	135:Vector2(1,-1),
+	135:Vector2(1,1),
 	180:Vector2(0,1),
 	225:Vector2(-1,1),
 	270:Vector2(-1,0),
@@ -18,11 +20,12 @@ var angle_o = {
 }
 
 
-func set_params(type, id, power=600, angle=0):
+func set_params(type, id, power=600, angle=0, speed=1.0):
 	$Area2D.rotation_degrees = angle
 	cannonPower = power
 	cannonType = type
 	identification = id
+	animSpeed = speed
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -32,7 +35,7 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if cannonType != "static" or cannonType != "":
-		$AnimationPlayer.play(cannonType)
+		$AnimationPlayer.play(cannonType, -1, animSpeed)
 	
 	orientation = angle_o[int($Area2D.rotation_degrees)]
 

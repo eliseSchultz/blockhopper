@@ -1,7 +1,10 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://sprites/player-Sheet.png" type="Texture" id=1]
 [ext_resource path="res://Player.gd" type="Script" id=2]
+[ext_resource path="res://sounds/death.wav" type="AudioStream" id=3]
+[ext_resource path="res://sounds/sfx_sounds_fanfare3.wav" type="AudioStream" id=4]
+[ext_resource path="res://sounds/sfx_exp_shortest_soft2.wav" type="AudioStream" id=5]
 
 [sub_resource type="Animation" id=1]
 resource_name = "cannon_shot"
@@ -185,7 +188,7 @@ shape = SubResource( 7 )
 
 [node name="DeathTimer" type="Timer" parent="."]
 process_mode = 0
-wait_time = 2.0
+wait_time = 1.5
 one_shot = true
 
 [node name="DeathParticles" type="Particles2D" parent="."]
@@ -199,7 +202,19 @@ process_material = SubResource( 8 )
 
 [node name="CannonMovementTimer" type="Timer" parent="."]
 process_mode = 0
-wait_time = 0.25
+wait_time = 0.118
 one_shot = true
+
+[node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 3 )
+volume_db = -7.37
+
+[node name="DoorSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 4 )
+volume_db = -5.732
+
+[node name="CannonSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 5 )
+volume_db = -8.598
 [connection signal="timeout" from="DeathTimer" to="." method="_on_DeathTimer_timeout"]
 [connection signal="timeout" from="CannonMovementTimer" to="." method="_on_CannonMovementTimer_timeout"]

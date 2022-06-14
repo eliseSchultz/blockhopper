@@ -5,9 +5,9 @@ signal player_death
 
 enum {LEFT = -1, RIGHT = 1}
 const SPEED = 128
-const JUMPMAX = -600
+const JUMPMAX = -300
 const GRAV = 10
-const MAXGRAV = 1000
+const MAXGRAV = 500
 const JUMPSPEED = -200
 const SPEEDMULT = 8
 const UP_DIR = Vector2(0,-1)
@@ -25,6 +25,7 @@ var is_shot = false
 var is_dead = false
 var allow_movement = true
 var allow_enter_cannon = true
+var allow_input = true
 var death_counter = 0
 
 var cannonVector = Vector2()
@@ -37,7 +38,6 @@ func processMovementInput(delta):
 		cannonPlayerMoveModifier = currSpeed/2
 	else:
 		cannonPlayerMoveModifier = 0
-	
 
 	if in_cannon:
 		jumping = false
@@ -45,20 +45,37 @@ func processMovementInput(delta):
 		motion = Vector2(0,0)
 		currSpeed = 0
 	#lateral movement
-	elif Input.is_action_pressed("ui_left"):
-		prevOrientation = orientation
-		orientation = -1
-		$Sprite.flip_h = false
-		calcMotion()
-	elif Input.is_action_pressed("ui_right"):
-		prevOrientation = orientation
-		orientation = 1
-		$Sprite.flip_h = true
-		calcMotion()
-	elif not is_shot: #this may need to be refined
-		#TODO: add gradual slow down
-		motion.x = 0
-		currSpeed = 0
+	elif allow_input:
+		if Input.is_action_pressed("ui_left"):
+			prevOrientation = orientation
+			orientation = -1
+			$Sprite.flip_h = false
+			calcMotion()
+		elif Input.is_action_pressed("ui_right"):
+			prevOrientation = orientation
+			orientation = 1
+			$Sprite.flip_h = true
+			calcMotion()
+		elif not is_on_floor() and not is_shot: #this may need to be refined
+			#TODO: add gradual slow down
+			if motion.x < 1 and motion.x > -1:
+				motion.x = 0
+			if motion.x > 0:
+				motion.x -= motion.x/12
+				currSpeed -= currSpeed/12
+			elif motion.x < 0:
+				motion.x += motion.x/-12
+				currSpeed += currSpeed/-12
+		elif not is_shot:
+			if motion.x < 1 and motion.x > -1:
+				motion.x = 0
+			if motion.x > 0:
+				motion.x -= motion.x*5/8
+				currSpeed -= currSpeed*5/8
+			elif motion.x < 0:
+				motion.x += motion.x*-5/8
+				currSpeed += currSpeed*-5/8
+			
 
 	if is_on_floor():
 		jumping = false
@@ -77,12 +94,11 @@ func processMovementInput(delta):
 		falling = true
 			
 	playMovementAnimation()
-			
 
 func playMovementAnimation():
 	if not $AnimationPlayer.current_animation == "cannon_shot":
 		rotation_degrees = 0
-		if motion.x != 0 and is_on_floor():
+		if motion.x != 0 and is_on_floor() and (Input.is_action_pressed("ui_left") or Input.is_action_pressed("ui_right")):
 			$AnimationPlayer.play("walk")
 		elif motion.y < 0:
 			$AnimationPlayer.play("jumping")
@@ -91,14 +107,13 @@ func playMovementAnimation():
 		else:
 			$AnimationPlayer.play("idle")
 
-		
 
 func calcMotion():
 	if prevOrientation != orientation:
 		currSpeed = 0
 	if(currSpeed < SPEED):
 		currSpeed += SPEEDMULT
-		print(currSpeed)
+		#print(currSpeed)
 	motion.x = orientation * currSpeed + (-1*orientation*cannonPlayerMoveModifier)
 
 func player_enter_cannon():
@@ -114,9 +129,11 @@ func cannon_shot(cV, cPos, cPower):
 	visible = true
 	is_shot = true
 	falling = true
+	allow_input = false
 	allow_enter_cannon = false
 	$CannonMovementTimer.start()
-	$AnimationPlayer.play("cannon_shot")
+	#$AnimationPlayer.play("cannon_shot")
+	$CannonSound.play(0.0)
 	motion = Vector2(cannonVector.x*cannonPower,cannonVector.y*cannonPower)
 
 func check_tile_collisions():
@@ -133,7 +150,7 @@ func check_tile_collisions():
 				
 				var tile_name = collision.collider.tile_set.tile_get_name(tile_id)
 
-				if tile_name == "spikes" or tile_name == "lava":
+				if (not is_dead) and (tile_name == "spikes" or tile_name == "lava" or tile_name == "hurtwall" or tile_name == "hurtupslope" or tile_name == "hurtdownslope"):
 					emit_signal("player_death")
 					death()
 				elif tile_name == "door":
@@ -142,10 +159,13 @@ func check_tile_collisions():
 func death():
 	$DeathTimer.start()
 	is_dead = true
+	allow_enter_cannon = false
 	$Sprite.visible = false
+	$CannonCollisonDetector/CollisionShape2D.disabled = true
+	$CollisionShape2D.disabled = true
 	$DeathParticles.emitting = true
+	$DeathSound.play(0.0)
 	death_counter += 1
-
 
 
 func _physics_process(delta):
@@ -162,6 +182,7 @@ func _physics_process(delta):
 	else:
 		processMovementInput(delta)
 	
+	#print("motion: ",motion)
 	motion = move_and_slide(motion, UP_DIR)
 	
 	if not is_dead:
@@ -171,8 +192,12 @@ func _on_DeathTimer_timeout():
 	position = startPosition
 	$Sprite.visible = true
 	is_dead = false
+	$CannonCollisonDetector/CollisionShape2D.disabled = false
+	$CollisionShape2D.disabled = false
+	allow_enter_cannon = true
 
 
 func _on_CannonMovementTimer_timeout():
 	allow_movement = true
 	allow_enter_cannon = true
+	allow_input = true
