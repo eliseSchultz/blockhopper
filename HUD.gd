@@ -18,5 +18,4 @@ func _process(delta):
 
 func _on_Player_player_death():
 	death_counter += 1
-	print("DEATH COUNTER" + str(death_counter))
 	player_vars.player_death_count = death_counter
